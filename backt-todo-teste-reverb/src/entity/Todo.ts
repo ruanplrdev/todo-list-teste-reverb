@@ -11,5 +11,8 @@ export class Todo {
 
     @Column()
     description: string
+    
+    @Column()
+    complete: boolean
 
 }

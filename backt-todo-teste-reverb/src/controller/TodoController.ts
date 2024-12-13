@@ -25,11 +25,12 @@ export class TodoController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        const { title, description } = request.body;
+        const { title, description, complete} = request.body;
 
         const user = Object.assign(new Todo(), {
             title,
             description,
+            complete
         })
 
         return this.todoRepository.save(user)
