@@ -5,16 +5,16 @@ import { Modal } from "@/components/Modal";
 import { useTodoContext } from "@/context/TodoContext";
 import { useFormik } from "formik";
 import { useEffect } from "react";
-import { createTodo, fetchTodos, updateTodo } from "@/api/todoApi";
+import { createTodo, fetchTodos, updateTodo, deleteTodo } from "@/api/todoApi";
 import { TodoItemProps } from "@/components/TodoItem";
 
 export default function Home() {
   const { listTodo, setListTodo } = useTodoContext();
   const { isModalOpen, setIsModalOpen } = useTodoContext();
   const { editingId, setEditingId } = useTodoContext();
-  const {itemToDelete, setItemToDelete} = useTodoContext();
-  const {isDeleteModalOpen, setIsDeleteModalOpen} = useTodoContext();
-  const {showCompleted, setShowCompleted} = useTodoContext();
+  const { itemToDelete, setItemToDelete } = useTodoContext();
+  const { isDeleteModalOpen, setIsDeleteModalOpen } = useTodoContext();
+  const { showCompleted, setShowCompleted } = useTodoContext();
 
   const formik = useFormik({
     initialValues: {
@@ -27,7 +27,7 @@ export default function Home() {
       title: Yup.string().required("Título é obrigatório"),
       description: Yup.string().required("Descrição é obrigatória"),
     }),
-    onSubmit: async (values:TodoItemProps) => {
+    onSubmit: async (values: TodoItemProps) => {
       if (editingId !== null) {
         // Editar item existente
         try {
@@ -54,36 +54,38 @@ export default function Home() {
       formik.resetForm();
     },
   });
-  
 
-  const handleDelete = () => {
+
+  const handleDelete = async () => {
     if (itemToDelete !== null) {
       setListTodo((prevList) => prevList.filter((item) => item.id !== itemToDelete));
+      await deleteTodo(itemToDelete)
       setItemToDelete(null);
       setIsDeleteModalOpen(false);
     }
   };
 
   const handleEdit = (id: number) => {
-    const itemToEdit = listTodo.find((item) => item.id === id);
+    const itemToEdit = listTodo.find((item: TodoItemProps): boolean => item.id === id);
     if (itemToEdit) {
-      formik.setValues({
+      const fomriObject: TodoItemProps = {
         id: itemToEdit.id,
         title: itemToEdit.title,
         description: itemToEdit.description,
-        complete: itemToEdit.complete,
-      });
+        complete: itemToEdit.complete
+      }
+      formik.setValues(fomriObject);
       setEditingId(id);
       setIsModalOpen(true);
     }
   };
 
-  const handleToggleComplete = (id: number) => {
-    setListTodo((prevList) =>
-      prevList.map((item) =>
-        item.id === id ? { ...item, complete: !item.complete } : item
-      )
-    );
+  const handleToggleComplete = async (id: number) => {
+    setListTodo((prevList) => prevList.map((item) => item.id === id ? { ...item, complete: !item.complete } : item));
+    const itemToEdit = 
+      listTodo.map((item) => item.id === id ? { ...item, complete: !item.complete } : item)
+        .find((item: TodoItemProps): boolean => item.id === id);
+    await updateTodo(id, itemToEdit);
   };
 
   const confirmDelete = (id: number) => {

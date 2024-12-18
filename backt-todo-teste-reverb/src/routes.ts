@@ -16,6 +16,11 @@ export const Routes = [{
     controller: TodoController,
     action: "save"
 }, {
+    method: "put",
+    route: "/todo/:id",
+    controller: TodoController,
+    action: "update"
+}, {
     method: "delete",
     route: "/todo/:id",
     controller: TodoController,

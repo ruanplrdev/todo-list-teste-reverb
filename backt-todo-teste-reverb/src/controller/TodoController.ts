@@ -25,14 +25,25 @@ export class TodoController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        const { title, description } = request.body;
+        const { title, description, complete } = request.body;
 
         const user = Object.assign(new Todo(), {
             title,
             description,
-        })
-
+            complete
+        });
         return this.todoRepository.save(user)
+    }
+    
+    async update(request: Request, response: Response, next: NextFunction) {
+        const id = parseInt(request.params.id)
+        const { title, description, complete }:Todo = request.body;
+        let userToUpdate:Todo = await this.todoRepository.findOneBy({ id });
+        userToUpdate.title = title;
+        userToUpdate.description = description;
+        userToUpdate.complete = complete;
+
+        return this.todoRepository.save(userToUpdate);
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {

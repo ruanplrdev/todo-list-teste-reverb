@@ -3,7 +3,7 @@ import { TodoItemProps } from "@/components/TodoItem";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000/", // Substitua com o endereço da sua API
+  baseURL: "http://localhost:4000", // Substitua com o endereço da sua API
 });
 
 // Função para pegar todos os itens de tarefas
@@ -14,19 +14,19 @@ export const fetchTodos = async () => {
 
 // Função para criar uma tarefa
 export const createTodo = async (newTodo: TodoItemProps) => {
-  const response = await api.post("/todos", newTodo);
+  const response = await api.post("/todo", newTodo);
   return response.data;
 };
 
 // Função para editar uma tarefa
-export const updateTodo = async (id: number, updatedTodo: TodoItemProps) => {
-  const response = await api.put(`/todos/${id}`, updatedTodo);
+export const updateTodo = async (id: number, updatedTodo: TodoItemProps | undefined) => {
+  const response = await api.put(`/todo/${id}`, updatedTodo);
   return response.data;
 };
 
 // Função para excluir uma tarefa
 export const deleteTodo = async (id: number) => {
-  const response = await api.delete(`/todos/${id}`);
+  const response = await api.delete(`/todo/${id}`);
   return response.data;
 };
 
