@@ -3,7 +3,7 @@ import { TodoItemProps } from "@/components/TodoItem";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000", // Substitua com o endereço da sua API
+  baseURL: "http://localhost:4000",
 });
 
 // Função para pegar todos os itens de tarefas
@@ -29,25 +29,3 @@ export const deleteTodo = async (id: number) => {
   const response = await api.delete(`/todo/${id}`);
   return response.data;
 };
-
-export default api;
-
-
-// export const deleteTodo = async (id: number) => {
-//   const response = await axios.delete(`${API_URL}/${id}`);
-//   return response.data;
-// };
-// export const updateTodo = async ({ id, formData }: { id: number; formData: FormData }) => {
-//   formData.append('id', `${id}`)
-//   const response = await axios.put(`${API_URL}/${id}`, formData, {
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-//   return response.data;
-// }
-
-// export const fetchTodoById = async (id: string | undefined) => {
-//   const response = await axios.get(`${API_URL}/${id}`);
-//   return response.data;
-// };

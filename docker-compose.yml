@@ -3,7 +3,7 @@ services:
   frontend:
     build:
       context: ./front-todo-teste-reverb
-    container_name: next-app
+    container_name: next-app-reverb
     ports:
       - '3000:3000'
     depends_on:
@@ -12,18 +12,16 @@ services:
   api:
     build:
       context: ./backt-todo-teste-reverb
-    container_name: express-api
+    container_name: express-api-reverb
     ports:
       - '4000:4000'
-    environment:
-      NODE_ENV: docker
     depends_on:
       - db
     env_file: ./backt-todo-teste-reverb/.env.docker
 
   db:
     image: postgres:13
-    container_name: postgres-db
+    container_name: postgres-reverb
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgresadmin
